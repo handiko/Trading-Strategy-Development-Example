@@ -42,9 +42,102 @@ For the sell position, the rules are as follows (reverse of the buy stop rules):
 
 ![](./sell-stop-example.png)
 
+In this article, we will develop this strategy for the USDJPY forex pair and run it on the D1 timeframe.
+
 ---
 
 ## MQL5 Code
+The MQL5 codes developed in this article use the OOP (Object-Oriented Programming) paradigm. The strategy is written into a class, and the actual trading strategy code would then initialize an instance of this class for each buy and sell trading direction. Using this technique, each instance would have different parameters and run independently from each other. The class definition of this strategy is described in the "CandlePatternBreakout.mqh" file, and the actual trading strategy is run on the "Candle Pattern Breakout - USDJPY.mq5" file. 
+
+### Definitions
+Two enumerations are written to ease the code writing. The Enums described here are about the trading direction (either buy only, sell only, or both buy and sell), and candle pattern (UUU, UUD, UDU, etc..)
+```mql5
+enum ENUM_DIRECTION_MODE {
+     BUY_ONLY,
+     SELL_ONLY,
+     BUY_AND_SELL
+};
+
+enum ENUM_CANDLE_PATTERN {
+     UUU,
+     UUD,
+     UDU,
+     UDD,
+     DUU,
+     DUD,
+     DDU,
+     DDD
+};
+```
+
+### Buy Signal - Code Snippet
+
+### Sell Signal - Code Snippet
+
+### OnTick Event - Code Snippet
+
+### Trading Strategy - Complete Code
+The complete code of the strategy below is the code with parameters after optimization. The optimization processes are described in the next paragraph below.
+
+```mql5
+#include "CandlePatternBreakout.mqh"
+
+input group "General Settings"
+static input int InpMagic = 1999;                     // Magic Number
+input int InpExpirationHours = 60;                    // Expiration Hours
+input double InpLot = 1.0;                            // Lot (fixed)
+
+input group "Buy Breakout Settings"
+input int InpPendingDist1 = 200;                      // Liquidity Distance (points)
+input ENUM_CANDLE_PATTERN InpPattern1 = UDD;          // Candle Pattern
+input double InpRewardToRisk1 = 1.4;                  // Reward to Risk Ratio
+input int InpStopLoss1 = 850;                         // StopLoss (points)
+
+input group "Sell Breakout Settings"
+input int InpPendingDist2 = 250;                      // Liquidity Distance (points)
+input ENUM_CANDLE_PATTERN InpPattern2 = UDD;          // Candle Pattern
+input double InpRewardToRisk2 = 0.8;                  // Reward to Risk Ratio
+input int InpStopLoss2 = 450;                         // StopLoss (points)
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CandlePatternBreakout buystop("USDJPY", InpLot, InpPendingDist1, InpPattern1, InpRewardToRisk1,
+                              InpStopLoss1, PERIOD_D1, InpExpirationHours, InpMagic + 1, BUY_ONLY);
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+CandlePatternBreakout sellstop("USDJPY", InpLot, InpPendingDist2, InpPattern2, InpRewardToRisk2,
+                               InpStopLoss2, PERIOD_D1, InpExpirationHours, InpMagic + 2, SELL_ONLY);
+
+//+------------------------------------------------------------------+
+//| Expert initialization function                                   |
+//+------------------------------------------------------------------+
+int OnInit() {
+     buystop.OnInitEvent();
+     sellstop.OnInitEvent();
+
+     return(INIT_SUCCEEDED);
+}
+
+//+------------------------------------------------------------------+
+//| Expert deinitialization function                                 |
+//+------------------------------------------------------------------+
+void OnDeinit(const int reason) {
+     buystop.OnDeinitEvent(reason);
+     sellstop.OnDeinitEvent(reason);
+}
+
+//+------------------------------------------------------------------+
+//| Expert tick function                                             |
+//+------------------------------------------------------------------+
+void OnTick() {
+     buystop.OnTickEvent();
+     sellstop.OnTickEvent();
+}
+//+------------------------------------------------------------------+
+```
 
 ## Parameters Optimization
 There are 5 parameters to be set and optimized for each market. They are:
