@@ -350,3 +350,8 @@ A trading strategy that employs a sequence of up and down days (Markov Chain) is
 
 MQL5 Codes included in this article:
 1. [Candle Pattern Breakout - USDJPY.mq5](https://github.com/handiko/Trading-Strategy-Development-Example/blob/main/MQL5/Candle%20Pattern%20Breakout%20-%20USDJPY.mq5)
+2. [CandlePatternBreakout.mqh - Strategy Class](https://github.com/handiko/Trading-Strategy-Development-Example/blob/main/MQL5/CandlePatternBreakout.mqh)
+3. [main.mqh - basic library](https://github.com/handiko/Trading-Strategy-Development-Example/blob/main/MQL5/main.mqh)
+4. [StandardIncludes.mqh - other functions](https://github.com/handiko/Trading-Strategy-Development-Example/blob/main/MQL5/StandardIncludes.mqh)
+
+---
