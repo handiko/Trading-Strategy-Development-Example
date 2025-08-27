@@ -347,3 +347,6 @@ The strategy is backtested on the USDJPY forex pair, D1 timeframe, from 2019-01-
 A trading strategy that employs a sequence of up and down days (Markov Chain) is presented. Even though it only uses a simple trading logic, the strategy could produce good results. With a simple trading strategy, maybe there is a need to re-optimize the parameters with the walk-forward optimization.
 
 ---
+
+MQL5 Codes included in this article:
+1. [Candle Pattern Breakout - USDJPY.mq5](https://github.com/handiko/Trading-Strategy-Development-Example/blob/main/MQL5/Candle%20Pattern%20Breakout%20-%20USDJPY.mq5)
