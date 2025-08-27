@@ -339,6 +339,11 @@ With this scheme, the trading strategy would capture the most recent underlying 
 ![](./re-opt-scheme.png)
 
 ## Backtest Result from The Strategy Above
-The strategy is backtested on the USDJPY forex pair, D1 timeframe, from 2019-01-01, and using price data from Tickmill-Real
+The strategy is backtested on the USDJPY forex pair, D1 timeframe, from 2019-01-01, and using price data from Tickmill-Live
 
 ![](./backtest-result.png)
+
+### Conclusion
+A trading strategy that employs a sequence of up and down days (Markov Chain) is presented. Even though it only uses a simple trading logic, the strategy could produce good results. With a simple trading strategy, maybe there is a need to re-optimize the parameters with the walk-forward optimization.
+
+---
