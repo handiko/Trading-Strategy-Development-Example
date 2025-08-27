@@ -9,3 +9,28 @@ One more thing, **I ran the strategy across several forex pairs and indices, and
 
 ## Basic Setup
 The idea is simple: by picking one candle sequence pattern from the Markov Chain study, we will put a buy stop or sell stop order above or below yesterday's high or low, plus some "pending distance" to account for the possibility of price whipsaw or false break. I use buy and sell stop order as a self-confirmation. If the buy or sell stop is triggered, then I assume the price has already cleared the whipsaw/false break area and would continue to move further in the direction of our trade (**following the underlying major trend**). Furthermore, I set an order-expiration timer. If the order is not triggered within the order's lifetime window, then I assume the trend has failed to materialize, and the order has to be deleted and then move on to find the next buy or sell signal.
+I only open one buy stop and one sell stop at a time (no multiple orders in the same direction).
+
+### Buy Stop Setup
+For the buy position, the rules are as follows:
+1. Runs on the Daily (D1) timeframe.
+2. The most recent past three days have the same candle sequence as the picked pattern (in the picture below is UDU, meaning Up-Down-Up days)
+3. Find yesterday's high.
+4. Add the pending distance in pips to yesterday's high. This is our entry (buy stop order) price.
+5. Subtract the stop loss distance in pips from the entry price. This is our stop loss price.
+6. Add the stop loss distance in pips times the reward-to-risk ratio to our entry price. This is our take-profit price.
+7. Set an expiration timer in hours for the order.
+
+![](./buy-stop-example.png)
+
+### Sell Stop Setup
+For the buy position, the rules are as follows (reverse of the buy stop rules):
+1. Runs on the Daily (D1) timeframe.
+2. The most recent past three days have the same candle sequence as the picked pattern (in the picture below is UDD, meaning Up-Down-Down days)
+3. Find yesterday's low.
+4. Subtract the pending distance in pips from yesterday's low. This is our entry (sell stop order) price.
+5. Add the stop loss distance in pips to the entry price. This is our stop loss price.
+6. Subtract the stop loss distance in pips times the reward-to-risk ratio from our entry price. This is our take-profit price.
+7. Set an expiration timer in hours for the order.
+
+![](./sell-stop-example.png)
