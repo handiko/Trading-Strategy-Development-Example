@@ -315,8 +315,9 @@ Initial parameter values are usually derived from manual visual inspection of th
 
 The optimization steps are divided into two parts:
 1. Optimize the parameters with the prior price data of a certain period, called **training data or in-sample data**. For example, a period of 5 years.
-2. The best sets of parameter values are then to be re-evaluated with unseen price data of a certain period, called **test data or out-of-sample data**.
-3. The set of parameter values that perform well on both datasets is then chosen as the final parameter values.
+2. The best sets of parameter values are then to be re-evaluated with unseen price data of a certain period, called **test data or out-of-sample data**. For example, a period of 1-to-2 years.
+3. The period of in-sample data should be roughly 3 times the out-of-sample data to achieve a balance between the long duration of training data and the rather large duration of test data.
+4. The set of parameter values that perform well on both datasets is then chosen as the final parameter values.
 
 The important thing is that, during the optimization with training data, the parameter value set should generate enough trading data so that the results are statistically significant. The rule of thumb is that the trading data should be at least 10 times the number of free parameters. In this case, with 4 free parameters (parameter 1-to-4), we need to see at least 40 trading data points to be generated during the iteration.
 
