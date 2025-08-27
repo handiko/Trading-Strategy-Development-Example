@@ -37,3 +37,15 @@ For the sell position, the rules are as follows (reverse of the buy stop rules):
 7. Set an expiration timer in hours for the order.
 
 ![](./sell-stop-example.png)
+
+## MQL5 Code
+
+## Parameters Optimization
+There are 5 parameters to be set and optimized for each market. They are:
+1. Candle Sequence Pattern: (UUU, UUD, UDU, UDD, etc..),
+2. Pending (liquidity) distance in points,
+3. Stop loss distance in points,
+4. Reward-to-Risk ratio, and
+5. Order Expiration in hours.
+
+Parameters 1-to-4 are independently optimized for buy and sell positions, but parameter 5 is a common parameter for both buy and sell positions. It is to be optimized after the buy and sell parameters are finished from the optimization steps.
