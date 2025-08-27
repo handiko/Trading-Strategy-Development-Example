@@ -339,6 +339,6 @@ With this scheme, the trading strategy would capture the most recent underlying 
 ![](./re-opt-scheme.png)
 
 ## Backtest Result from The Strategy Above
-The strategy is backtested on USDJPY forex pair, D1 timeframe, from 2019-01-01.
+The strategy is backtested on the USDJPY forex pair, D1 timeframe, from 2019-01-01, and using price data from Tickmill-Real
 
 ![](./backtest-result.png)
