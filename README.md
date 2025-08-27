@@ -1,1 +1,3 @@
-# Trading-Strategy-Development-Example
+# Trading Strategy Development Example
+
+Continuing the discussion from the previous sections, in this article, we will develop a real trading strategy inspired by the Markov Chain study results. The trading strategy presented in this article, I actually use it personally on my real trading account. There are some minor parameter differences from my personal settings, but overall, it is actually very much the same. I do not recommend that anybody follow my strategy, as I cannot guarantee this strategy will continue to deliver positive results in the future. **_Alpha-decay_** (the decay of an algorithmic trading performance) is a real phenomenon, and you should know about it.
