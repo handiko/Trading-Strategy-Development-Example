@@ -206,8 +206,6 @@ void CandlePatternBreakout::executeSell(double entry) {
 OnTick Event on MQL5 or MetaTrader is an event which called if there is a new price delivery event is happening (ie, price tick). This function is commonly used for the "heartbeat" that runs the trading strategy. In this code, we are using the "new candle event" (ie, the opening of the new day's candle on D1 timeframe) to run the evaluation, which finds the buy or sell signal based on the current data.
 ```mql5
 void CandlePatternBreakout::OnTickEvent() {
-     MqlDateTime time;
-
      processPos(buyPos);
      processPos(sellPos);
 
@@ -217,8 +215,6 @@ void CandlePatternBreakout::OnTickEvent() {
                totalBars = bars;
 
                TakeProfit = (int)(StopLoss * RewardToRisk);
-
-               TimeCurrent(time);
 
                if((DirectionMode == BUY_ONLY) || (DirectionMode == BUY_AND_SELL)) {
                     if(buyPos <= 0) {
