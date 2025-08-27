@@ -337,3 +337,8 @@ Example of a walk-forward optimization with a re-opt period of 6 months:
 With this scheme, the trading strategy would capture the most recent underlying pattern that is relevant to today's market environment. Even though the overfitting risk is not completely gone, at least with consistent periodic re-training, the strategy should consistently adapt itself.
 
 ![](./re-opt-scheme.png)
+
+## Backtest Result from The Strategy Above
+The strategy is backtested on USDJPY forex pair, D1 timeframe, from 2019-01-01.
+
+![](./backtest-result.png)
