@@ -310,3 +310,5 @@ There are 5 parameters to be set and optimized for each market. They are:
 5. Order Expiration in hours.
 
 Parameters 1-to-4 are independently optimized for buy and sell positions, but parameter 5 is a common parameter for both buy and sell positions. It is to be optimized after the buy and sell parameters are finished from the optimization steps.
+
+Initial parameter values are usually derived from manual visual inspection of the chart (ie, to determine how many points are likely to be required for SL and TP distances), from experience, or from other data and prior studies. These initial parameter values are mostly the biggest factor that determines the success of finding the optimal values for each parameter. If the initial values are set without any prior knowledge or without any reasonable foundations, the optimized values are likely to overfit and lead to faster alpha-decay.
