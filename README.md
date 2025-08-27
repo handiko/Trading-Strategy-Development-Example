@@ -319,6 +319,8 @@ The optimization steps are divided into two parts:
 3. The period of in-sample data should be roughly 3 times the out-of-sample data to achieve a balance between the long duration of training data and the rather large duration of test data.
 4. The set of parameter values that perform well on both datasets is then chosen as the final parameter values.
 
+There is an "art" in the optimization process. We should pick a longer training data period to capture the longer-lasting underlying pattern, but not too long so that the captured pattern is still relevant to today's market conditions. If the training data is too short, the optimization process is likely to capture noise that the underlying pattern itself.
+
 The important thing is that, during the optimization with training data, the parameter value set should generate enough trading data so that the results are statistically significant. The rule of thumb is that the trading data should be at least 10 times the number of free parameters. In this case, with 4 free parameters (parameter 1-to-4), we need to see at least 40 trading data points to be generated during the iteration.
 
 ## Walk-Forward Optimization (Periodic Re-Optimization)
