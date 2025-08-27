@@ -323,6 +323,8 @@ There is an "art" in the optimization process. We should pick a longer training 
 
 The important thing is that, during the optimization with training data, the parameter value set should generate enough trading data so that the results are statistically significant. The rule of thumb is that the trading data should be at least 10 times the number of free parameters. In this case, with 4 free parameters (parameter 1-to-4), we need to see at least 40 trading data points to be generated during the iteration.
 
+![](./optimization-scheme.png)
+
 ## Walk-Forward Optimization (Periodic Re-Optimization)
 As the trading strategy presented in this article is rather simple, any characteristic change that happens in the market would likely not be factored into the strategy. The financial market is not static and continues to evolve. Therefore, if the trading strategy is set to be fixed, it could lead to the diminishing of trading performance (alpha-decay). One practical and easy solution to these problems is periodic re-optimization or walk-forward optimization.
 
