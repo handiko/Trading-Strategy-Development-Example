@@ -301,7 +301,7 @@ void OnTick() {
 //+------------------------------------------------------------------+
 ```
 
-## Parameters Optimization
+## Backtesting and Parameters Optimization
 There are 5 parameters to be set and optimized for each market. They are:
 1. Candle Sequence Pattern: (UUU, UUD, UDU, UDD, etc..),
 2. Pending (liquidity) distance in points,
@@ -328,4 +328,12 @@ The important thing is that, during the optimization with training data, the par
 ## Walk-Forward Optimization (Periodic Re-Optimization)
 As the trading strategy presented in this article is rather simple, any characteristic change that happens in the market would likely not be factored into the strategy. The financial market is not static and continues to evolve. Therefore, if the trading strategy is set to be fixed, it could lead to the diminishing of trading performance (alpha-decay). One practical and easy solution to these problems is periodic re-optimization or walk-forward optimization.
 
-Walk forward optimization is basically running the 
+Walk-forward optimization is basically running the backtesting and parameter optimization periodically after the strategy is run on the real account or real forward testing.
+Example of a walk-forward optimization with a re-opt period of 6 months:
+1. The strategy is trained with in-sample data from 2018 to 2023. Test data is from 2023 to mid-2024. After that, the strategy is deployed in a real account for six months.
+2. 6 months later, the strategy is retrained with in-sample data from mid-2018 to mid-2023. Test data is from mid-2023 to 2025. After that, the strategy is redeployed in a real account for six months.
+3. Again, 6 months later, the strategy is retrained with in-sample data from 2019 to 2024. Test data is from 2024 to mid-2025. And-so-on ...
+
+With this scheme, the trading strategy would capture the most recent underlying pattern that is relevant to today's market environment. Even though the overfitting risk is not completely gone, at least with consistent periodic re-training, the strategy should consistently adapt to the market conditions.
+
+![](./re-opt-scheme.png)
