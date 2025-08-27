@@ -312,3 +312,14 @@ There are 5 parameters to be set and optimized for each market. They are:
 Parameters 1-to-4 are independently optimized for buy and sell positions, but parameter 5 is a common parameter for both buy and sell positions. It is to be optimized after the buy and sell parameters are finished from the optimization steps.
 
 Initial parameter values are usually derived from manual visual inspection of the chart (ie, to determine how many points are likely to be required for SL and TP distances), from experience, or from other data and prior studies. These initial parameter values are mostly the biggest factor that determines the success of finding the optimal values for each parameter. If the initial values are set without any prior knowledge or without any reasonable foundations, the optimized values are likely to overfit and lead to faster alpha-decay.
+
+The optimization steps are divided into two parts:
+1. Optimize the parameters with the prior price data of a certain period, called **training data or in-sample data**. For example, a period of 5 years.
+2. The best sets of parameter values are then to be re-evaluated with unseen price data of a certain period, called **test data or out-of-sample data**.
+3. The set of parameter values that perform well on both datasets is then chosen as the final parameter values.
+
+The important thing is that, during the optimization with training data, the parameter value set should generate enough trading data so that the results are statistically significant. The rule of thumb is that the trading data should be at least 10 times the number of free parameters. In this case, with 4 free parameters (parameter 1-to-4), we need to see at least 40 trading data points to be generated during the iteration.
+
+## Walk-Forward Optimization (Periodic Re-Optimization)
+As the trading strategy presented in this article is rather simple, any characteristic change that happens in the market would likely not be factored into the strategy. The financial market is not static and continues to evolve. Therefore, if the trading strategy is set to be fixed, it could lead to the diminishing of trading performance (alpha-decay). One practical and easy solution to these problems is periodic re-optimization or walk-forward optimization.
+
