@@ -71,10 +71,176 @@ enum ENUM_CANDLE_PATTERN {
 ```
 
 ### Buy Signal - Code Snippet
+The buy signal is exactly as described above. It seeks the required candle sequence pattern, finds yesterday's high, calculates the entry, TP, and SL price, and then sets the expiration period.
+```mql5
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double CandlePatternBreakout::findBuySignal() {
+     ENUM_CANDLE_PATTERN cp;
+     double high;
+     bool candle[3];
+
+     for(int i = 0; i < 3; i++) {
+          candle[i] = (iClose(Pair, Timeframe, i + 1) > iOpen(Pair, Timeframe, i + 1)) ? true : false;
+     }
+
+     if(candle[2] && candle[1] && candle[0]) {
+          cp = UUU;
+     } else if(candle[2] && candle[1] && !candle[0]) {
+          cp = UUD;
+     } else if(candle[2] && !candle[1] && candle[0]) {
+          cp = UDU;
+     } else if(candle[2] && !candle[1] && !candle[0]) {
+          cp = UDD;
+     } else if(!candle[2] && candle[1] && candle[0]) {
+          cp = DUU;
+     } else if(!candle[2] && candle[1] && !candle[0]) {
+          cp = DUD;
+     } else if(!candle[2] && !candle[1] && candle[0]) {
+          cp = DDU;
+     } else {
+          cp = DDD;
+     }
+
+     high = iHigh(Pair, Timeframe, 1);
+     if(cp == Pattern) {
+          return high;
+     }
+
+     return -1;
+}
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CandlePatternBreakout::executeBuy(double entry) {
+     entry = NormalizeDouble(entry + LiquidityDist * pairPoint, pairDigits);
+
+     double ask = SymbolInfoDouble(Pair, SYMBOL_ASK);
+     if(ask > entry) return;
+
+     double tp = entry + TakeProfit * pairPoint;
+     tp = NormalizeDouble(tp, pairDigits);
+
+     double sl = entry - StopLoss * pairPoint;
+     sl = NormalizeDouble(sl, pairDigits);
+
+     double lots = Lots;
+
+     datetime expiration = iTime(Pair, Timeframe, 0) + ExpirationHours * PeriodSeconds(PERIOD_H1) - PeriodSeconds(PERIOD_M5);
+
+     trade.BuyStop(lots, entry, Pair, sl, tp, ORDER_TIME_SPECIFIED, expiration);
+
+     buyPos = trade.ResultOrder();
+}
+```
 
 ### Sell Signal - Code Snippet
+The sell signal is exactly as described above as well. It seeks the required candle sequence pattern, finds yesterday's low, calculates the entry, TP, and SL price, and then sets the expiration period.
+```mql5
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double CandlePatternBreakout::findSellSignal() {
+     ENUM_CANDLE_PATTERN cp;
+     double low;
+     bool candle[3];
+
+     for(int i = 0; i < 3; i++) {
+          candle[i] = (iClose(Pair, Timeframe, i + 1) > iOpen(Pair, Timeframe, i + 1)) ? true : false;
+     }
+
+     if(candle[2] && candle[1] && candle[0]) {
+          cp = UUU;
+     } else if(candle[2] && candle[1] && !candle[0]) {
+          cp = UUD;
+     } else if(candle[2] && !candle[1] && candle[0]) {
+          cp = UDU;
+     } else if(candle[2] && !candle[1] && !candle[0]) {
+          cp = UDD;
+     } else if(!candle[2] && candle[1] && candle[0]) {
+          cp = DUU;
+     } else if(!candle[2] && candle[1] && !candle[0]) {
+          cp = DUD;
+     } else if(!candle[2] && !candle[1] && candle[0]) {
+          cp = DDU;
+     } else {
+          cp = DDD;
+     }
+
+     low = iLow(Pair, Timeframe, 1);
+     if(cp == Pattern) {
+          return low;
+     }
+
+     return -1;
+}
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void CandlePatternBreakout::executeSell(double entry) {
+     entry = NormalizeDouble(entry - LiquidityDist * pairPoint, pairDigits);
+
+     double bid = SymbolInfoDouble(Pair, SYMBOL_BID);
+     if(bid < entry) return;
+
+     double tp = entry - TakeProfit * pairPoint;
+     tp = NormalizeDouble(tp, pairDigits);
+
+     double sl = entry + StopLoss * pairPoint;
+     sl = NormalizeDouble(sl, pairDigits);
+
+     double lots = Lots;
+
+     datetime expiration = iTime(Pair, Timeframe, 0) + ExpirationHours * PeriodSeconds(PERIOD_H1) - PeriodSeconds(PERIOD_M5);
+
+     trade.SellStop(lots, entry, Pair, sl, tp, ORDER_TIME_SPECIFIED, expiration);
+
+     sellPos = trade.ResultOrder();
+}
+```
 
 ### OnTick Event - Code Snippet
+OnTick Event on MQL5 or MetaTrader is an event which called if there is a new price delivery event is happening (ie, price tick). This function is commonly used for the "heartbeat" that runs the trading strategy. In this code, we are using the "new candle event" (ie, the opening of the new day's candle on D1 timeframe) to run the evaluation, which finds the buy or sell signal based on the current data.
+```mql5
+void CandlePatternBreakout::OnTickEvent() {
+     MqlDateTime time;
+
+     processPos(buyPos);
+     processPos(sellPos);
+
+     if(MarketOpenHours(Pair)) {
+          int bars = iBars(Pair, Timeframe);
+          if(totalBars != bars) {
+               totalBars = bars;
+
+               TakeProfit = (int)(StopLoss * RewardToRisk);
+
+               TimeCurrent(time);
+
+               if((DirectionMode == BUY_ONLY) || (DirectionMode == BUY_AND_SELL)) {
+                    if(buyPos <= 0) {
+                         double high = findBuySignal();
+                         if(high > 0) {
+                              executeBuy(high);
+                         }
+                    }
+               }
+
+               if((DirectionMode == SELL_ONLY) || (DirectionMode == BUY_AND_SELL)) {
+                    if(sellPos <= 0) {
+                         double low = findSellSignal();
+                         if(low > 0) {
+                              executeSell(low);
+                         }
+                    }
+               }
+          }
+     }
+}
+```
 
 ### Trading Strategy - Complete Code
 The complete code of the strategy below is the code with parameters after optimization. The optimization processes are described in the next paragraph below.
