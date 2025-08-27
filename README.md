@@ -43,6 +43,7 @@ For the sell position, the rules are as follows (reverse of the buy stop rules):
 ![](./sell-stop-example.png)
 
 ---
+
 ## MQL5 Code
 
 ## Parameters Optimization
