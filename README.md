@@ -12,11 +12,11 @@ Previous Section (part 3): [Using a Markov chain to determine market risk](https
 Continuing the discussion from the previous sections, in this article, we will develop a real trading strategy inspired by the Markov Chain study results. The trading strategy presented in this article, I actually use it personally on my real trading account. There are some minor parameter differences from my personal settings, but overall, it is actually very much the same. 
 
 ## Disclaimer !!!
-**I do not recommend that anybody follow my strategy, as I cannot guarantee this strategy will continue to deliver positive results in the future**. **_Alpha-decay_** (the decay of an algorithmic trading performance) is a real phenomenon, and you should know about it.
+**I do not recommend that anybody follow my strategy, as I cannot guarantee this strategy will continue to deliver positive results in the future**. **_Alpha-decay_** (a decay of an algorithmic trading performance) is a real phenomenon, and you should know about it.
 
 **I ran the strategy across several forex pairs and indices, and each market has its own setting tailored to its market characteristics**. You cannot only rely on one pair/market and hope it will constantly print money. Each market has its own period of several consecutive losses, even though in the long run it still delivers positive results. By deploying the strategy on several markets, any consecutive loss period would be covered by profits from other markets.
 
-One more thing, all of the strategy codes presented in this article are the simplified versions of what I am using right now. The simplifications are made to ease the understanding of the underlying logic behind the strategy.
+One more thing, all of the strategy codes presented in this article are the simplified versions of what I am using right now. The simplifications are made to ease the understanding of the underlying logic behind the strategy. You cannot just use the code presented here to trade on a real account. These codes are enough to conduct a backtest and optimization, but still need many additional codes to be run on a real account.
 
 ---
 
@@ -57,7 +57,7 @@ In this article, we will develop this strategy for the USDJPY forex pair and run
 The MQL5 codes developed in this article use the OOP (Object-Oriented Programming) paradigm. The strategy is written into a class, and the actual trading strategy code would then initialize an instance of this class for each buy and sell trading direction. Using this technique, each instance would have different parameters and run independently from each other. The class definition of this strategy is described in the "CandlePatternBreakout.mqh" file, and the actual trading strategy is run on the "Candle Pattern Breakout - USDJPY.mq5" file. 
 
 ### Definitions
-Two enumerations are written to ease the code writing. The Enums described here are about the trading direction (either buy only, sell only, or both buy and sell), and candle pattern (UUU, UUD, UDU, etc..)
+Two enumerations are written to ease the code writing. The Enums described here are about the trading direction (either buy only, sell, or both buy and sell), and candle pattern (UUU, UUD, UDU, etc.)
 ```mql5
 enum ENUM_DIRECTION_MODE {
      BUY_ONLY,
@@ -346,7 +346,7 @@ With this scheme, the trading strategy would capture the most recent underlying 
 ![](./re-opt-scheme.png)
 
 ## Backtest Result from The Strategy Above
-The strategy is backtested on the USDJPY forex pair, D1 timeframe, from 2019-01-01, and using price data from Tickmill-Live
+The strategy is backtested on the USDJPY forex pair, D1 timeframe, from 2019-01-01, using price data from Tickmill-Live
 
 ![](./backtest-result.png)
 
