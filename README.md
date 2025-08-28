@@ -60,7 +60,8 @@ In this article, we will develop this strategy for the USDJPY forex pair and run
 The MQL5 code in this article is built using the Object-Oriented Programming (OOP) paradigm. The trading strategy is encapsulated within a class, and the main program initializes separate instances of this class for each buy and sell signal. This approach allows each instance to have unique parameters and operate independently. The class definition is located in the [CandlePatternBreakout.mqh](https://github.com/handiko/Trading-Strategy-Development-Example/blob/main/MQL5/CandlePatternBreakout.mqh) file, while the strategy itself is executed from the [Candle Pattern Breakout - USDJPY.mq5](https://github.com/handiko/Trading-Strategy-Development-Example/blob/main/MQL5/Candle%20Pattern%20Breakout%20-%20USDJPY.mq5) file.
 
 ### Enumerations
-Two enumerations are written to ease the code writing. The Enums described here are about the trading direction (either buy only, sell, or both buy and sell), and candle pattern (UUU, UUD, UDU, etc).
+To simplify the code, I've created two enumerations. The first defines the trading direction. Specifying whether the strategy should execute buy orders, sell orders, or both. The second enumeration categorizes specific candle sequences (e.g., UUU, UUD, UDU) for signal generation.
+
 ```mql5
 enum ENUM_DIRECTION_MODE {
      BUY_ONLY,
@@ -81,7 +82,7 @@ enum ENUM_CANDLE_PATTERN {
 ```
 
 ### Buy Signal - Code Snippet
-The buy signal is exactly as described above. It seeks the required candle sequence pattern, finds yesterday's high, calculates the entry, TP, and SL price, and then sets the expiration period.
+The buy signal operates precisely as described above. It identifies the required candle sequence pattern, determines yesterday's high, calculates the entry, Take-Profit (TP), and Stop-Loss (SL) prices, and sets an expiration period for the order.
 ```mql5
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -147,7 +148,7 @@ void CandlePatternBreakout::executeBuy(double entry) {
 ```
 
 ### Sell Signal - Code Snippet
-The sell signal is exactly as described above as well. It seeks the required candle sequence pattern, finds yesterday's low, calculates the entry, TP, and SL price, and then sets the expiration period.
+The sell signal functions in the same manner. It identifies the required candle sequence pattern, determines yesterday's low, calculates the entry, Take-Profit (TP), and Stop-Loss (SL) prices, and sets the order's expiration period.
 ```mql5
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -249,7 +250,7 @@ void CandlePatternBreakout::OnTickEvent() {
 ```
 
 ### Trading Strategy - Complete Code
-The complete code of the strategy below is the code with parameters after optimization. The optimization processes are described in the next paragraph below.
+The complete strategy code provided below includes the optimized parameters. The optimization process itself is detailed in the following paragraph.
 
 ```mql5
 #include "CandlePatternBreakout.mqh"
