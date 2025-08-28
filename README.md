@@ -59,8 +59,8 @@ In this article, we will develop this strategy for the USDJPY forex pair and run
 ## MQL5 Code
 The MQL5 code in this article is built using the Object-Oriented Programming (OOP) paradigm. The trading strategy is encapsulated within a class, and the main program initializes separate instances of this class for each buy and sell signal. This approach allows each instance to have unique parameters and operate independently. The class definition is located in the [CandlePatternBreakout.mqh](https://github.com/handiko/Trading-Strategy-Development-Example/blob/main/MQL5/CandlePatternBreakout.mqh) file, while the strategy itself is executed from the [Candle Pattern Breakout - USDJPY.mq5](https://github.com/handiko/Trading-Strategy-Development-Example/blob/main/MQL5/Candle%20Pattern%20Breakout%20-%20USDJPY.mq5) file.
 
-### Definitions
-Two enumerations are written to ease the code writing. The Enums described here are about the trading direction (either buy only, sell, or both buy and sell), and candle pattern (UUU, UUD, UDU, etc.)
+### Enumerations
+Two enumerations are written to ease the code writing. The Enums described here are about the trading direction (either buy only, sell, or both buy and sell), and candle pattern (UUU, UUD, UDU, etc).
 ```mql5
 enum ENUM_DIRECTION_MODE {
      BUY_ONLY,
