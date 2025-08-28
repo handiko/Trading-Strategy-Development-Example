@@ -341,7 +341,7 @@ Example of a walk-forward optimization with a re-opt period of 6 months:
 2. 6 months later, the strategy is retrained with in-sample data from mid-2018 to mid-2023. Test data is from mid-2023 to 2025. After that, the strategy is redeployed in a real account for six months.
 3. Again, 6 months later, the strategy is retrained with in-sample data from 2019 to 2024. Test data is from 2024 to mid-2025. And-so-on ...
 
-With this scheme, the trading strategy would capture the most recent underlying pattern that is relevant to today's market environment. Even though the overfitting risk is not completely gone, at least with consistent periodic re-training, the strategy should consistently adapt itself.
+With this scheme, the trading strategy would capture the most recent underlying pattern that is relevant to today's market environment. Even though the risk of overfitting is not eliminated, with consistent periodic retraining, the strategy should remain adaptable.
 
 ![](./re-opt-scheme.png)
 
