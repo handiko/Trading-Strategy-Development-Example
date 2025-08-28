@@ -9,20 +9,23 @@ Previous Section (part 3): [Using a Markov chain to determine market risk](https
 
 ---
 
-Continuing the discussion from the previous sections, in this article, we will develop a real trading strategy inspired by the Markov Chain study results. The trading strategy presented in this article, I actually use it personally on my real trading account. There are some minor parameter differences from my personal settings, but overall, it is actually very much the same. 
+In this article, we'll develop a real-world trading strategy based on the insights from our Markov Chain study. The strategy presented is a live trading strategy that I personally use, with only minor parameter differences from my own settings.
 
 ## Disclaimer !!!
-**I do not recommend that anybody follow my strategy, as I cannot guarantee this strategy will continue to deliver positive results in the future**. **_Alpha-decay_** (a decay of an algorithmic trading performance) is a real phenomenon, and you should know about it.
+**You shouldn't follow this strategy, as I can't guarantee its future performance**. The phenomenon of **_alpha decay_**—the natural decline in a trading algorithm's effectiveness over time—is a well-documented reality that you should be aware of.
 
 **I ran the strategy across several forex pairs and indices, and each market has its own setting tailored to its market characteristics**. You cannot only rely on one pair/market and hope it will constantly print money. Each market has its own period of several consecutive losses, even though in the long run it still delivers positive results. By deploying the strategy on several markets, any consecutive loss period would be covered by profits from other markets.
 
-One more thing, all of the strategy codes presented in this article are the simplified versions of what I am using right now. The simplifications are made to ease the understanding of the underlying logic behind the strategy. You cannot just use the code presented here to trade on a real account. These codes are enough to conduct a backtest and optimization, but still need many additional codes to be run on a real account.
+I have simplified the strategy code in this article to make the underlying logic easier to understand. These code snippets are suitable for backtesting and optimization but require additional programming before they can be deployed in a live trading environment.
 
 ---
 
 ## Basic Setup
-The idea is simple: by picking one candle sequence pattern from the Markov Chain study, we will put a buy stop or sell stop order above or below yesterday's high or low, plus some "pending distance" to account for the possibility of price whipsaw or false break. I use buy and sell stop order as a self-confirmation. If the buy or sell stop is triggered, then I assume the price has already cleared the whipsaw/false break area and would continue to move further in the direction of our trade (**following the underlying major trend**). Furthermore, I set an order-expiration timer. If the order is not triggered within the order's lifetime window, then I assume the trend has failed to materialize, and the order has to be deleted and then move on to find the next buy or sell signal.
-I only open one buy stop and one sell stop at a time (no multiple orders in the same direction). For simplicity, in this article, we use fixed lot risk management as much as 1% of the initial margin balance.
+The strategy is straightforward: we place a buy stop or sell stop order above or below yesterday's high or low, with an added pending distance to mitigate false breakouts and price whipsaws. The activation of a buy or sell stop order serves as self-confirmation, signaling that the price has cleared the volatility area and is likely to continue in the direction of the underlying major trend.
+
+To manage risk, an order expiration timer is set. If the order isn't triggered within its specified lifespan, we assume the trend has not materialized, and the order is deleted in preparation for the next signal.
+
+Only one buy stop and one sell stop order are active at any given time. For simplicity, this article utilizes a fixed lot size risk management approach, risking 1% of the initial margin balance per trade.
 
 ### Buy Stop Setup
 For the buy position, the rules are as follows:
@@ -54,7 +57,7 @@ In this article, we will develop this strategy for the USDJPY forex pair and run
 ---
 
 ## MQL5 Code
-The MQL5 codes developed in this article use the OOP (Object-Oriented Programming) paradigm. The strategy is written into a class, and the actual trading strategy code would then initialize an instance of this class for each buy and sell trading direction. Using this technique, each instance would have different parameters and run independently from each other. The class definition of this strategy is described in the [CandlePatternBreakout.mqh](https://github.com/handiko/Trading-Strategy-Development-Example/blob/main/MQL5/CandlePatternBreakout.mqh) file, and the actual trading strategy is run on the [Candle Pattern Breakout - USDJPY.mq5](https://github.com/handiko/Trading-Strategy-Development-Example/blob/main/MQL5/Candle%20Pattern%20Breakout%20-%20USDJPY.mq5) file. 
+The MQL5 code in this article is built using the Object-Oriented Programming (OOP) paradigm. The trading strategy is encapsulated within a class, and the main program initializes separate instances of this class for each buy and sell signal. This approach allows each instance to have unique parameters and operate independently. The class definition is located in the [CandlePatternBreakout.mqh](https://github.com/handiko/Trading-Strategy-Development-Example/blob/main/MQL5/CandlePatternBreakout.mqh) file, while the strategy itself is executed from the [Candle Pattern Breakout - USDJPY.mq5](https://github.com/handiko/Trading-Strategy-Development-Example/blob/main/MQL5/Candle%20Pattern%20Breakout%20-%20USDJPY.mq5) file.
 
 ### Definitions
 Two enumerations are written to ease the code writing. The Enums described here are about the trading direction (either buy only, sell, or both buy and sell), and candle pattern (UUU, UUD, UDU, etc.)
@@ -210,7 +213,7 @@ void CandlePatternBreakout::executeSell(double entry) {
 ```
 
 ### OnTick Event - Code Snippet
-OnTick Event on MQL5 or MetaTrader is an event which called if there is a new price delivery event is happening (ie, price tick). This function is commonly used for the "heartbeat" that runs the trading strategy. In this code, we are using the "new candle event" (ie, the opening of the new day's candle on D1 timeframe) to run the evaluation, which finds the buy or sell signal based on the current data.
+In MQL5, the OnTick event is a handler that executes every time a new price tick arrives. While it can serve as the "heartbeat" for a trading strategy, our code instead uses a "new candle event" to trigger its logic within the OnTickEvent function. This means the strategy's evaluation and signal generation run only once at the opening of a new day's candle on the D1 timeframe, basing its analysis on the latest complete market data.
 ```mql5
 void CandlePatternBreakout::OnTickEvent() {
      processPos(buyPos);
@@ -316,19 +319,26 @@ There are 5 parameters to be set and optimized for each market. They are:
 4. Reward-to-Risk ratio, and
 5. Order Expiration in hours.
 
-Parameters 1-to-4 are independently optimized for buy and sell positions, but parameter 5 is a common parameter for both buy and sell positions. It is to be optimized after the buy and sell parameters are finished from the optimization steps.
+Parameter optimization is a critical step in developing a robust trading strategy. The process involves systematically refining a strategy's settings to achieve optimal performance, while mitigating the risk of overfitting. Overfitting occurs when a model is excessively tailored to historical data, mistaking random noise for genuine patterns, which leads to poor performance in live trading.
 
-Initial parameter values are usually derived from manual visual inspection of the chart (ie, to determine how many points are likely to be required for SL and TP distances), from experience, or from other data and prior studies. These initial parameter values are mostly the biggest factor that determines the success of finding the optimal values for each parameter. If the initial values are set without any prior knowledge or without any reasonable foundations, the optimized values are likely to overfit and lead to faster alpha-decay.
+### Optimization Methodology
 
-The optimization steps are divided into two parts:
-1. Optimize the parameters with the prior price data of a certain period, called **training data or in-sample data**. For example, a period of 5 years.
-2. The best sets of parameter values are then to be re-evaluated with unseen price data of a certain period, called **test data or out-of-sample data**. For example, a period of 1-to-2 years.
-3. The period of in-sample data should be roughly 3 times the out-of-sample data to achieve a balance between the long duration of training data and the rather large duration of test data.
-4. The set of parameter values that perform well on both datasets is then chosen as the final parameter values.
+The optimization process is divided into two distinct phases to ensure the strategy's effectiveness and minimize overfitting:
 
-There is an "art" in the optimization process. We should pick a longer training data period to capture the longer-lasting underlying pattern, but not too long so that the captured pattern is still relevant to today's market conditions. If the training data is too short, the optimization process is likely to capture noise than the underlying pattern itself.
+* Initial Parameter Values: Initial values for parameters are not set randomly. They are derived from prior knowledge, such as manual chart analysis, backtesting experience, or previous studies. These foundational values are crucial, as they significantly influence the success of the optimization process. Without a reasonable starting point, the optimization is more likely to yield overfitted results that are susceptible to rapid alpha decay—the natural decline of an algorithmic strategy's performance over time.
+* In-Sample and Out-of-Sample Testing: The optimization process uses a bifurcated approach to data.
+1. In-Sample (Training) Data: This is a historical data set (e.g., 5 years) used to train and optimize the strategy's parameters. Parameters 1-4 are optimized independently for buy and sell positions, while parameter 5 is a common parameter optimized after the others are finalized.
+2. Out-of-Sample (Testing) Data: This is a separate, unseen data set (e.g., 1-2 years) used to validate the results from the in-sample optimization. The ideal ratio is for the in-sample period to be roughly three times the length of the out-of-sample period.
 
-The important thing is that, during the optimization with training data, the parameter value set should generate enough trading data so that the results are statistically significant. The rule of thumb is that the trading data should be at least 10 times the number of free parameters. In this case, with 4 free parameters (parameter 1-to-4), we need to see at least 40 trading data points to be generated during the iteration.
+The final set of parameters is chosen based on its performance across both data sets, ensuring the strategy is robust and not merely a result of chance.
+
+### Statistical Significance
+
+During the optimization process, it's essential to ensure the results are statistically significant. A key rule of thumb is that the number of trades generated must be at least 10 times the number of free parameters. In this case, with four free parameters, the strategy should produce a minimum of 40 trades during the training period to provide a reliable basis for evaluation.
+
+### The Art of Optimization
+
+Choosing the length of the training data is an important consideration. The data set must be long enough to capture long-term market patterns, yet not so long that the captured patterns are no longer relevant to current market conditions. A training period that is too short may lead to the optimization process focusing on market noise rather than meaningful underlying trends.
 
 ![](./optimization-scheme.png)
 
