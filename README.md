@@ -362,3 +362,5 @@ MQL5 Codes included in this article:
 4. [StandardIncludes.mqh - other functions](https://github.com/handiko/Trading-Strategy-Development-Example/blob/main/MQL5/StandardIncludes.mqh)
 
 ---
+
+Next Section (part 5): [Trading Strategy Improvement](https://github.com/handiko/Improvement-to-an-existing-strategy/blob/main/README.md)
