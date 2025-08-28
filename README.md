@@ -343,15 +343,16 @@ Choosing the length of the training data is an important consideration. The data
 ![](./optimization-scheme.png)
 
 ## Walk-Forward Optimization (Periodic Re-Optimization)
-As the trading strategy presented in this article is rather simple, any characteristic change that happens in the market would likely not be factored into the strategy. The financial market is not static and continues to evolve. Therefore, if the trading strategy is set to be fixed, it could lead to the diminishing of trading performance (alpha-decay). One practical and easy solution to these problems is periodic re-optimization or walk-forward optimization.
+Due to the inherent simplicity of the presented trading strategy, it may not adequately adapt to evolving market conditions. Since financial markets are dynamic, a fixed strategy is susceptible to alpha decay, a decline in performance over time. A practical solution to this challenge is periodic re-optimization, commonly known as walk-forward optimization.
 
-Walk-forward optimization is basically running the backtesting and parameter optimization periodically after the strategy is run on the real account or real forward testing.
-Example of a walk-forward optimization with a re-opt period of 6 months:
-1. The strategy is trained with in-sample data from 2018 to 2023. Test data is from 2023 to mid-2024. After that, the strategy is deployed in a real account for six months.
-2. 6 months later, the strategy is retrained with in-sample data from mid-2018 to mid-2023. Test data is from mid-2023 to 2025. After that, the strategy is redeployed in a real account for six months.
-3. Again, 6 months later, the strategy is retrained with in-sample data from 2019 to 2024. Test data is from 2024 to mid-2025. And-so-on ...
+Walk-forward optimization involves a cyclical process of backtesting and parameter optimization that is performed at regular intervals. This approach ensures the strategy remains relevant and adapts to recent market behavior.
 
-With this scheme, the trading strategy would capture the most recent underlying pattern that is relevant to today's market environment. Even though the risk of overfitting is not eliminated, with consistent periodic retraining, the strategy should remain adaptable.
+The process can be broken down into these steps:
+1. Initial Deployment: The strategy is trained on an initial in-sample dataset (e.g., 2018-2023) and validated on an out-of-sample test set (e.g., 2023 to mid-2024). It is then deployed for a specific period, such as six months, in a live trading environment.
+2. Periodic Retraining: After the initial live trading period, the strategy is retrained with a new, shifted dataset. For example, the new in-sample data would cover mid-2018 to mid-2023, with a new test set from mid-2023 to 2025. The strategy is then redeployed for another six months.
+3. Continuous Cycle: This cycle of retraining and redeployment continues, with the datasets progressively shifting forward to incorporate the most recent market data.
+
+This method allows the strategy to capture the most current market patterns. While it doesn't eliminate the risk of overfitting, consistent periodic retraining helps the strategy remain adaptable and robust over the long term.
 
 ![](./re-opt-scheme.png)
 
@@ -361,7 +362,7 @@ The strategy is backtested on the USDJPY forex pair, D1 timeframe, from 2019-01-
 ![](./backtest-result.png)
 
 ### Conclusion
-A trading strategy that employs a sequence of up and down days (Markov Chain) is presented. Even though it only uses a simple trading logic, the strategy could produce good results. With a simple trading strategy, maybe there is a need to re-optimize the parameters with the walk-forward optimization.
+The provided trading strategy, while simple in its logic, is designed to generate a sequence of trades based on a Markov Chain study. However, a fixed strategy like this is vulnerable to alpha decay as market conditions evolve. To counter this, walk-forward optimization can be implemented. This process involves periodically re-optimizing the strategy's parameters with recent market data. By consistently adapting the strategy's settings, walk-forward optimization ensures it remains aligned with current market behavior, thereby sustaining its performance over time.
 
 ---
 
